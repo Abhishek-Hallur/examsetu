@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Check, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { CheckoutButton } from "@/components/premium/checkout-button";
 
 export const metadata: Metadata = {
   title: "Premium",
@@ -35,10 +34,10 @@ const PREMIUM = [
 ];
 
 const PLANS = [
-  { name: "Monthly", price: "₹99", per: "/month" },
-  { name: "Quarterly", price: "₹249", per: "/3 months", tag: "Save 16%" },
-  { name: "Yearly", price: "₹799", per: "/year", tag: "Most popular", featured: true },
-  { name: "Lifetime", price: "₹1999", per: "one-time", tag: "Best value" },
+  { name: "Monthly", price: "₹99", amount: 99, per: "/month" },
+  { name: "Quarterly", price: "₹249", amount: 249, per: "/3 months", tag: "Save 16%" },
+  { name: "Yearly", price: "₹799", amount: 799, per: "/year", tag: "Most popular", featured: true },
+  { name: "Lifetime", price: "₹1999", amount: 1999, per: "one-time", tag: "Best value" },
 ];
 
 export default function PremiumPage() {
@@ -80,13 +79,11 @@ export default function PremiumPage() {
               <span className="text-3xl font-bold">{p.price}</span>
               <span className="text-sm text-muted-foreground"> {p.per}</span>
             </div>
-            <Button
+            <CheckoutButton
+              amount={p.amount}
+              planName={p.name}
               variant={p.featured ? "gradient" : "outline"}
-              className="mt-6 w-full"
-              asChild
-            >
-              <Link href="/signup">Choose {p.name}</Link>
-            </Button>
+            />
           </Card>
         ))}
       </div>
