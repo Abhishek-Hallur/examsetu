@@ -15,7 +15,7 @@ const schema = z.object({
 
 export async function POST(req: Request) {
   const ip = getIp(req);
-  const { allowed } = rateLimit(`reset:${ip}`, LIMIT, WINDOW);
+  const { allowed } = await rateLimit(`reset:${ip}`, LIMIT, WINDOW);
   if (!allowed) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
   }

@@ -42,6 +42,7 @@ export const metadata: Metadata = {
     title: `${SITE.name} — ${SITE.tagline}`,
     description: SITE.description,
   },
+  manifest: "/manifest.json",
 };
 
 export const viewport: Viewport = {

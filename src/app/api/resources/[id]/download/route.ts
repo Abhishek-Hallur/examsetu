@@ -13,7 +13,7 @@ export async function POST(
 ) {
   const { id } = await params;
   const ip = getIp(req);
-  const { allowed } = rateLimit(`download:${id}:${ip}`, LIMIT, WINDOW);
+  const { allowed } = await rateLimit(`download:${id}:${ip}`, LIMIT, WINDOW);
 
   if (!allowed) {
     return NextResponse.json({ error: "Too many requests" }, { status: 429 });
