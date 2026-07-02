@@ -7,8 +7,9 @@ import { signIn } from "next-auth/react";
 import { GraduationCap, User, Mail, Lock, Chrome } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Suspense } from "react";
 
-export default function SignupPage() {
+function SignupForm() {
   const router = useRouter();
 
   const [name, setName] = React.useState("");
@@ -234,5 +235,13 @@ export default function SignupPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-[calc(100vh-4rem)] items-center justify-center"><div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent" /></div>}>
+      <SignupForm />
+    </Suspense>
   );
 }
