@@ -1,0 +1,265 @@
+// ExamSetu — Prisma schema
+// Phase 2/3: full normalized schema (postgres).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  GUEST
+  STUDENT
+  PREMIUM
+  MODERATOR
+  ADMIN
+}
+
+// ─────────────────────────────────────────────────────────────
+// Catalog
+// ─────────────────────────────────────────────────────────────
+
+model Exam {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  fullName    String
+  description String
+  color       String
+  icon        String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  subjects  ExamSubject[]
+  resources Resource[]
+}
+
+model Subject {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  color       String
+  icon        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  exams     ExamSubject[]
+  resources Resource[]
+}
+
+model ExamSubject {
+  examId    String
+  subjectId String
+
+  exam    Exam    @relation(fields: [examId], references: [id], onDelete: Cascade)
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@id([examId, subjectId])
+  @@index([subjectId])
+}
+
+model ResourceType {
+  id   String @id @default(cuid())
+  slug String @unique
+  name String
+  icon String
+
+  resources Resource[]
+}
+
+model Tag {
+  id   String @id @default(cuid())
+  slug String @unique
+  name String
+
+  resources ResourceTag[]
+}
+
+model ResourceTag {
+  resourceId String
+  tagId      String
+
+  resource Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([resourceId, tagId])
+  @@index([tagId])
+}
+
+model Resource {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+
+  examId String
+  exam   Exam   @relation(fields: [examId], references: [id], onDelete: Cascade)
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+  resourceTypeId String
+  resourceType   ResourceType @relation(fields: [resourceTypeId], references: [id], onDelete: Cascade)
+
+  classLevel String
+  chapter    String
+  format     String
+  year       Int?
+  language   String
+  difficulty String?
+
+  views       Int   @default(0)
+  downloads   Int   @default(0)
+  rating      Float @default(0)
+  ratingCount Int   @default(0)
+
+  source    String
+  isPremium Boolean @default(false)
+  published Boolean @default(true)
+  fileUrl   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tags          ResourceTag[]
+  bookmarks     Bookmark[]
+  userDownloads UserDownload[]
+  userViews     UserView[]
+  reports       Report[]
+
+  @@index([examId])
+  @@index([subjectId])
+  @@index([resourceTypeId])
+  @@index([language])
+  @@index([isPremium])
+  @@index([published])
+  @@index([chapter])
+  @@index([classLevel])
+  @@index([difficulty])
+  @@index([format])
+}
+
+// ─────────────────────────────────────────────────────────────
+// Auth.js (NextAuth v5) — @auth/prisma-adapter models
+// ─────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  role          Role      @default(STUDENT)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  bookmarks     Bookmark[]
+  userDownloads UserDownload[]
+  userViews     UserView[]
+  reports       Report[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─────────────────────────────────────────────────────────────
+// User interactions
+// ─────────────────────────────────────────────────────────────
+
+model Bookmark {
+  userId     String
+  resourceId String
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resource Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@id([userId, resourceId])
+  @@index([userId])
+  @@index([resourceId])
+}
+
+model UserDownload {
+  id         String   @id @default(cuid())
+  userId     String
+  resourceId String
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resource Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([resourceId])
+}
+
+model UserView {
+  userId     String
+  resourceId String
+  viewedAt   DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resource Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+
+  @@id([userId, resourceId])
+  @@index([userId])
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  resourceId String
+  userId     String?
+  reason     String
+  resolved   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  resource Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+  user     User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([resourceId])
+  @@index([userId])
+  @@index([resolved])
+}
