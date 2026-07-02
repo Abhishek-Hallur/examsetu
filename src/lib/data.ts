@@ -1,3 +1,4 @@
+import { logger } from "./logger";
 /**
  * Data-access contract for ExamSetu.
  *
@@ -193,7 +194,7 @@ export async function getExams(): Promise<Exam[]> {
     });
     if (rows.length === 0) return EXAMS;
     return rows.map(mapExam);
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return EXAMS;
   }
 }
@@ -209,7 +210,7 @@ export async function getExamBySlug(slug: string): Promise<Exam | null> {
     });
     if (!row) return EXAMS.find((e) => e.slug === slug) ?? null;
     return mapExam(row);
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return EXAMS.find((e) => e.slug === slug) ?? null;
   }
 }
@@ -226,7 +227,7 @@ export async function getSubjects(): Promise<Subject[]> {
     });
     if (rows.length === 0) return SUBJECTS;
     return rows.map(mapSubject);
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return SUBJECTS;
   }
 }
@@ -239,7 +240,7 @@ export async function getSubjectBySlug(slug: string): Promise<Subject | null> {
     });
     if (!row) return SUBJECTS.find((s) => s.slug === slug) ?? null;
     return mapSubject(row);
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return SUBJECTS.find((s) => s.slug === slug) ?? null;
   }
 }
@@ -255,7 +256,7 @@ export async function getResourceTypes(): Promise<ResourceTypeMeta[]> {
     });
     if (rows.length === 0) return RESOURCE_TYPES;
     return rows.map((r) => ({ slug: r.slug, name: r.name, icon: r.icon }));
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return RESOURCE_TYPES;
   }
 }
@@ -272,7 +273,7 @@ export async function getResourceBySlug(slug: string): Promise<Resource | null> 
     });
     if (!row) return DEMO_RESOURCES.find((r) => r.slug === slug) ?? null;
     return mapResource(row as ResourceRow);
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return DEMO_RESOURCES.find((r) => r.slug === slug) ?? null;
   }
 }
@@ -311,7 +312,7 @@ export async function getDashboardStats(userId: string): Promise<{
       prisma.userView.count({ where: { userId } }),
     ]);
     return { bookmarks, downloads, views };
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return { bookmarks: 0, downloads: 0, views: 0 };
   }
 }
@@ -336,7 +337,7 @@ export async function getUserBookmarks(
       results: rows.map((b) => mapResource(b.resource as ResourceRow)),
       total,
     };
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return { results: [], total: 0 };
   }
 }
@@ -371,7 +372,7 @@ export async function getUserDownloads(
       })),
       total,
     };
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return { results: [], total: 0 };
   }
 }
@@ -417,7 +418,7 @@ export async function searchResources(
       results: (rows as ResourceRow[]).map(mapResource),
       total,
     };
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     // Demo fallback — mirrors resources-explorer.tsx filtering exactly.
     let list = DEMO_RESOURCES.filter((r) => {
       const hay =
@@ -464,7 +465,7 @@ export async function getAdminStats(): Promise<AdminStats> {
         prisma.bookmark.count(),
       ]);
     return { totalResources, publishedResources, totalUsers, openReports, totalDownloads, totalBookmarks };
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return { totalResources: 0, publishedResources: 0, totalUsers: 0, openReports: 0, totalDownloads: 0, totalBookmarks: 0 };
   }
 }
@@ -565,7 +566,7 @@ export async function getAdminResources(opts: {
       })),
       total,
     };
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return { results: [], total: 0 };
   }
 }
@@ -615,7 +616,7 @@ export async function getAdminUsers(opts: {
       }),
     ]);
     return { results: rows, total };
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return { results: [], total: 0 };
   }
 }
@@ -657,7 +658,7 @@ export async function getAdminReports(opts: {
       }),
     ]);
     return { results: rows, total };
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return { results: [], total: 0 };
   }
 }
@@ -707,7 +708,7 @@ export async function getResourceForEdit(id: string): Promise<{
     });
     if (!r) return null;
     return { ...r, tags: r.tags.map((t) => t.tag.slug) };
-  } catch {
+  } catch (err) { logger.error(err, "Data fetch error");
     return null;
   }
 }

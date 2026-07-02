@@ -13,7 +13,7 @@ const schema = z.object({ email: z.string().email() });
 
 export async function POST(req: Request) {
   const ip = getIp(req);
-  const { allowed } = rateLimit(`forgot:${ip}`, LIMIT, WINDOW);
+  const { allowed } = await rateLimit(`forgot:${ip}`, LIMIT, WINDOW);
   if (!allowed) {
     return NextResponse.json({ error: "Too many requests. Try again later." }, { status: 429 });
   }

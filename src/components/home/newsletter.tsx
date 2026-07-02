@@ -10,11 +10,19 @@ export function NewsletterSection() {
   const [email, setEmail] = React.useState("");
   const [done, setDone] = React.useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    // Phase 9 wires this to the notification/email service.
-    setDone(true);
+    try {
+      await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      setDone(true);
+    } catch (err) {
+      console.error("Failed to subscribe", err);
+    }
   };
 
   return (
