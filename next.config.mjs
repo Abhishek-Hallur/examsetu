@@ -3,6 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  serverExternalPackages: ["pino", "pino-pretty"],
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [

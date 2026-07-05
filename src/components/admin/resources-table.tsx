@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useTransition } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { DataTable, Column } from "@/components/admin/data-table";
 import type { AdminResourceRow } from "@/lib/data";

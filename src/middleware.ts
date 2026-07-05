@@ -1,4 +1,7 @@
-import { auth } from "@/auth";
+import NextAuth from "next-auth";
+import authConfig from "./auth.config";
+
+export const { auth } = NextAuth(authConfig);
 import { NextResponse } from "next/server";
 import type { Role } from "@prisma/client";
 
