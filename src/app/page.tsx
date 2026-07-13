@@ -3,10 +3,8 @@ import {
   ExamsSection,
   SubjectsSection,
   ResourceTypesSection,
-  TrendingSection,
   FeaturesSection,
   PremiumBanner,
-  TestimonialsSection,
 } from "@/components/home/sections";
 import { FaqSection } from "@/components/home/faq";
 import { NewsletterSection } from "@/components/home/newsletter";
@@ -17,11 +15,9 @@ export default function HomePage() {
       <Hero />
       <ExamsSection />
       <SubjectsSection />
-      <TrendingSection />
       <ResourceTypesSection />
       <FeaturesSection />
       <PremiumBanner />
-      <TestimonialsSection />
       <FaqSection />
       <NewsletterSection />
     </>

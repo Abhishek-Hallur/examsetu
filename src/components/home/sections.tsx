@@ -13,15 +13,12 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
-import { ResourceCard } from "@/components/resource-card";
 import { Reveal } from "@/components/motion/reveal";
 import { SectionHeading } from "@/components/home/section-heading";
 import {
   EXAMS,
   SUBJECTS,
   RESOURCE_TYPES,
-  DEMO_RESOURCES,
-  TESTIMONIALS,
 } from "@/lib/constants";
 import { formatCompact, cn } from "@/lib/utils";
 
@@ -138,28 +135,6 @@ export function ResourceTypesSection() {
   );
 }
 
-/* ── Trending + Latest ─────────────────────────────────────── */
-export function TrendingSection() {
-  const trending = [...DEMO_RESOURCES].sort((a, b) => b.views - a.views).slice(0, 6);
-  return (
-    <section className="container py-16 sm:py-20">
-      <SectionHeading
-        eyebrow="Trending Now"
-        title="What students are studying today"
-        subtitle="The most viewed resources across all exams this week."
-        href="/resources?sort=most-viewed"
-      />
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {trending.map((r, i) => (
-          <Reveal key={r.id} delay={(i % 3) * 0.05}>
-            <ResourceCard resource={r} />
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 /* ── How it works / Features ───────────────────────────────── */
 const FEATURES = [
   {
@@ -252,36 +227,6 @@ export function PremiumBanner() {
           </div>
         </div>
       </Reveal>
-    </section>
-  );
-}
-
-/* ── Testimonials ──────────────────────────────────────────── */
-export function TestimonialsSection() {
-  return (
-    <section className="container py-16 sm:py-20">
-      <SectionHeading
-        eyebrow="Loved by toppers"
-        title="Students get more done with ExamSetu"
-      />
-      <div className="grid gap-5 lg:grid-cols-3">
-        {TESTIMONIALS.map((t, i) => (
-          <Reveal key={t.name} delay={i * 0.05}>
-            <Card className="h-full p-6">
-              <p className="text-sm leading-relaxed">“{t.quote}”</p>
-              <div className="mt-5 flex items-center gap-3">
-                <div className="grid size-10 place-items-center rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-sm font-bold text-white">
-                  {t.avatar}
-                </div>
-                <div>
-                  <div className="text-sm font-semibold">{t.name}</div>
-                  <div className="text-xs text-muted-foreground">{t.role}</div>
-                </div>
-              </div>
-            </Card>
-          </Reveal>
-        ))}
-      </div>
     </section>
   );
 }

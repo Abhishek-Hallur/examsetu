@@ -16,7 +16,6 @@ import {
   EXAMS,
   SUBJECTS,
   RESOURCE_TYPES,
-  DEMO_RESOURCES,
 } from "@/lib/constants";
 import type {
   Exam,
@@ -148,20 +147,6 @@ function mapSubject(row: SubjectRow): Subject {
 // Shared sort/filter helpers (mirror resources-explorer.tsx)
 // ─────────────────────────────────────────────────────────────
 
-function sortResources(list: Resource[], sort?: string): Resource[] {
-  switch (sort) {
-    case "newest":
-      return [...list].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
-    case "most-downloaded":
-      return [...list].sort((a, b) => b.downloads - a.downloads);
-    case "most-viewed":
-      return [...list].sort((a, b) => b.views - a.views);
-    case "highest-rated":
-      return [...list].sort((a, b) => b.rating - a.rating);
-    default:
-      return list;
-  }
-}
 
 /** Prisma orderBy equivalent of the sort options above. */
 function prismaOrderBy(sort?: string) {
@@ -271,10 +256,10 @@ export async function getResourceBySlug(slug: string): Promise<Resource | null> 
       where: { slug },
       include: resourceInclude,
     });
-    if (!row) return DEMO_RESOURCES.find((r) => r.slug === slug) ?? null;
+    if (!row) return null;
     return mapResource(row as ResourceRow);
   } catch (err) { logger.error(err, "Data fetch error");
-    return DEMO_RESOURCES.find((r) => r.slug === slug) ?? null;
+    return null;
   }
 }
 
@@ -419,24 +404,7 @@ export async function searchResources(
       total,
     };
   } catch (err) { logger.error(err, "Data fetch error");
-    // Demo fallback — mirrors resources-explorer.tsx filtering exactly.
-    let list = DEMO_RESOURCES.filter((r) => {
-      const hay =
-        `${r.title} ${r.description} ${r.chapter} ${r.tags.join(" ")}`.toLowerCase();
-      if (q && !hay.includes(q.toLowerCase())) return false;
-      if (exam && r.exam !== exam) return false;
-      if (subject && r.subject !== subject) return false;
-      if (type && r.resourceType !== type) return false;
-      if (language && r.language !== language) return false;
-      return true;
-    });
-
-    list = sortResources(list, sort);
-
-    const total = list.length;
-    const start = (page - 1) * pageSize;
-    const results = list.slice(start, start + pageSize);
-    return { results, total };
+    return { results: [], total: 0 };
   }
 }
 

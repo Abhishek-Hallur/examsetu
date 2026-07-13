@@ -2,7 +2,6 @@ import type {
   Exam,
   Subject,
   ResourceTypeMeta,
-  Resource,
 } from "@/types";
 
 export const SITE = {
@@ -111,152 +110,6 @@ export const LANGUAGES = ["English", "Hindi", "Kannada"] as const;
 export const CLASS_LEVELS = ["Class 11", "Class 12", "Dropper", "All"] as const;
 export const DIFFICULTIES = ["Easy", "Medium", "Hard"] as const;
 
-/**
- * Demo resources for Phase 1 (no DB yet). Replaced by Prisma queries in Phase 2.
- * Sources shown are placeholders for approved/redistributable origins only.
- */
-export const DEMO_RESOURCES: Resource[] = [
-  {
-    id: "r1",
-    slug: "jee-main-physics-kinematics-notes",
-    title: "Kinematics — Complete Notes (Class 11)",
-    description:
-      "Detailed notes covering motion in 1D & 2D, projectile motion, relative velocity with solved examples.",
-    exam: "jee-main",
-    subject: "physics",
-    classLevel: "Class 11",
-    chapter: "Kinematics",
-    resourceType: "notes",
-    format: "PDF",
-    language: "English",
-    difficulty: "Medium",
-    tags: ["kinematics", "mechanics", "class-11", "motion"],
-    views: 48210,
-    downloads: 12840,
-    rating: 4.7,
-    ratingCount: 1203,
-    updatedAt: "2026-06-12",
-    source: "NCERT / Open Courseware",
-    isPremium: false,
-  },
-  {
-    id: "r2",
-    slug: "neet-biology-human-physiology-pyq",
-    title: "Human Physiology — Previous Year Questions (2014–2025)",
-    description:
-      "Chapter-wise NEET PYQs on human physiology with detailed solutions and answer keys.",
-    exam: "neet",
-    subject: "biology",
-    classLevel: "Class 12",
-    chapter: "Human Physiology",
-    resourceType: "pyqs",
-    format: "PDF",
-    year: 2025,
-    language: "English",
-    difficulty: "Hard",
-    tags: ["physiology", "pyq", "neet", "biology"],
-    views: 67320,
-    downloads: 24110,
-    rating: 4.9,
-    ratingCount: 2890,
-    updatedAt: "2026-06-20",
-    source: "NTA Public Archive",
-    isPremium: false,
-  },
-  {
-    id: "r3",
-    slug: "jee-advanced-maths-calculus-formula-sheet",
-    title: "Calculus — One-Page Formula Sheet",
-    description:
-      "All limits, derivatives, integrals & series formulas condensed into a printable revision sheet.",
-    exam: "jee-advanced",
-    subject: "mathematics",
-    classLevel: "All",
-    chapter: "Calculus",
-    resourceType: "formula-sheets",
-    format: "PDF",
-    language: "English",
-    difficulty: "Medium",
-    tags: ["calculus", "formula-sheet", "revision"],
-    views: 91500,
-    downloads: 41200,
-    rating: 4.8,
-    ratingCount: 3540,
-    updatedAt: "2026-06-25",
-    source: "Open Courseware",
-    isPremium: false,
-  },
-  {
-    id: "r4",
-    slug: "jee-main-chemistry-mole-concept-mock",
-    title: "Mole Concept — Full Mock Test (30 Qs)",
-    description:
-      "Timed mock test on mole concept & stoichiometry with instant scoring and solutions.",
-    exam: "jee-main",
-    subject: "chemistry",
-    classLevel: "Class 11",
-    chapter: "Some Basic Concepts of Chemistry",
-    resourceType: "mock-tests",
-    format: "PDF",
-    language: "English",
-    difficulty: "Medium",
-    tags: ["mole-concept", "mock-test", "stoichiometry"],
-    views: 33120,
-    downloads: 9870,
-    rating: 4.6,
-    ratingCount: 870,
-    updatedAt: "2026-06-18",
-    source: "Open Courseware",
-    isPremium: false,
-  },
-  {
-    id: "r5",
-    slug: "kcet-physics-current-electricity-revision",
-    title: "Current Electricity — Quick Revision (Kannada + English)",
-    description:
-      "Bilingual revision notes on current electricity tailored to the Karnataka state syllabus.",
-    exam: "kcet",
-    subject: "physics",
-    classLevel: "Class 12",
-    chapter: "Current Electricity",
-    resourceType: "revision-notes",
-    format: "PDF",
-    language: "Kannada",
-    difficulty: "Easy",
-    tags: ["current-electricity", "kcet", "revision", "bilingual"],
-    views: 14200,
-    downloads: 5120,
-    rating: 4.5,
-    ratingCount: 410,
-    updatedAt: "2026-06-22",
-    source: "State Board Open Material",
-    isPremium: false,
-  },
-  {
-    id: "r6",
-    slug: "neet-chemistry-organic-named-reactions",
-    title: "Organic Chemistry — Named Reactions Mind Map",
-    description:
-      "Visual mind map of 60+ named reactions with conditions, reagents and mechanisms.",
-    exam: "neet",
-    subject: "chemistry",
-    classLevel: "Class 12",
-    chapter: "Organic Chemistry — Basic Principles",
-    resourceType: "mind-maps",
-    format: "PDF",
-    language: "English",
-    difficulty: "Hard",
-    tags: ["organic", "named-reactions", "mind-map"],
-    views: 52800,
-    downloads: 19340,
-    rating: 4.9,
-    ratingCount: 2110,
-    updatedAt: "2026-06-28",
-    source: "Open Courseware",
-    isPremium: false,
-  },
-];
-
 export const FAQS = [
   {
     q: "Is ExamSetu really free?",
@@ -277,30 +130,6 @@ export const FAQS = [
   {
     q: "Can I request a resource?",
     a: "Absolutely. Premium and registered users can request specific topics, and our automation looks for matching approved material.",
-  },
-];
-
-export const TESTIMONIALS = [
-  {
-    name: "Ananya Sharma",
-    role: "NEET 2025 • AIR 1,204",
-    quote:
-      "ExamSetu saved me hours every week. Everything I needed for Biology revision was in one place, perfectly organized.",
-    avatar: "AS",
-  },
-  {
-    name: "Rohit Verma",
-    role: "JEE Advanced 2025 • IIT Bombay",
-    quote:
-      "The formula sheets and PYQ banks are gold. I stopped jumping between 10 different websites.",
-    avatar: "RV",
-  },
-  {
-    name: "Sneha Patil",
-    role: "KCET 2025 • Top 500",
-    quote:
-      "Finally a platform with Kannada + English material for the state syllabus. Clean, fast and free.",
-    avatar: "SP",
   },
 ];
 

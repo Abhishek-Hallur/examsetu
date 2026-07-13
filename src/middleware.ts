@@ -19,7 +19,7 @@ export default auth((req) => {
     }
     const role = req.auth.user?.role as Role | undefined;
     if (!role || !ADMIN_ROLES.includes(role)) {
-      return NextResponse.redirect(new URL("/", req.url));
+      return new NextResponse("403 Forbidden", { status: 403 });
     }
     return NextResponse.next();
   }
