@@ -1,19 +1,20 @@
 # ExamSetu Codebase Audit Report
 
 > Last verified against `main`: July 13, 2026  
-> Scope: targeted re-audit of fake data removal, admin access, authorization, Vercel configuration, and test claims.
+> Scope: targeted re-audit of fake data removal, admin access, authorization, Vercel configuration, tests, and documentation accuracy.
 
 ## Executive Summary
 
-The main application is substantially more complete than the repository README indicates. Authentication, dashboard pages, admin pages, admin APIs, payments, logging, rate limiting, and baseline tests are present.
+The application is substantially implemented. Authentication, dashboard pages, admin pages, admin APIs, payments, logging, distributed rate limiting, and baseline tests are present.
 
 The re-audit did not find an obvious admin authentication bypass in the checked routes. Admin pages are protected by middleware, and checked admin APIs repeat authorization on the server.
 
-Three concrete issues remained:
+The concrete issues found during this re-audit were:
 
 1. `.env.example` documented `REDIS_URL`, but runtime code consumed Upstash REST variables.
 2. The Redis client contained fake fallback credentials.
-3. The only unit test was a placeholder that always passed.
+3. The unit test was a placeholder that always passed.
+4. `README.md` still described the project as a Phase 1 demo.
 
 These issues are fixed on the audit branch.
 
@@ -87,6 +88,13 @@ Replaced the placeholder assertion with tests that verify:
 - Development behavior without Upstash configuration.
 - Production failure when required Upstash variables are missing.
 - Forwarded-IP extraction behavior.
+- The test file is now named `tests/rate-limit.test.ts` instead of the misleading `example.test.ts`.
+
+### Documentation
+
+- Updated `README.md` to describe the implemented database, authentication, dashboard, admin, payment, and testing features.
+- Removed obsolete Phase 1 demo-data instructions.
+- Documented the real setup, Vercel variables, admin route, and available scripts.
 
 ## Remaining Work
 
@@ -105,13 +113,9 @@ Replaced the placeholder assertion with tests that verify:
 - Add email verification for credentials-based accounts.
 - Replace the basic homepage-only E2E smoke test with major user-flow coverage.
 
-### Documentation drift
-
-`README.md` still describes the application as a Phase 1 demo and is outdated. It should be revised separately because this audit intentionally avoids rewriting unrelated documentation wholesale.
-
 ## Validation Status
 
-This repository-only review could inspect committed files but could not execute the project. Run the following before merging:
+This repository review could inspect committed files but could not execute the project because the execution environment could not reach GitHub to clone the repository. Run the following before merging:
 
 ```bash
 npm ci
@@ -122,13 +126,15 @@ npm run build
 npm run test:e2e
 ```
 
-Do not mark the branch fully verified unless these commands pass with the production-required environment variables and a test database.
+Do not mark the branch fully verified unless these commands pass with the required environment variables and a test database.
 
 ## Final Assessment
 
 - Fake demo resources: removed from active resource data and seeding.
 - Admin route: implemented at `/admin`.
 - Admin authorization: present in middleware and checked API routes.
-- Vercel rate-limit configuration: previously mismatched; fixed on the audit branch.
-- Unit-test claim: previously overstated; corrected with real tests.
+- Vercel rate-limit configuration: corrected.
+- Fake Redis credentials: removed.
+- Placeholder unit test: replaced with real behavioral tests.
+- README: updated to the actual project state.
 - Zero-vulnerability guarantee: not possible. Continue dependency scanning, code review, and automated security testing.
